@@ -1,0 +1,46 @@
+{
+  "name": "@adobedjangir/commerce-admin-ims-access",
+  "version": "1.0.2",
+  "description": "Email-based RBAC add-on for @adobedjangir/commerce-admin-management. Assign admin/editor/viewer roles by email via a UI (super-admins in .env), with server-side enforcement of config saves, schema edits, audit reverts, and snapshot ops.",
+  "license": "Apache-2.0",
+  "author": "Adobe Inc.",
+  "keywords": [
+    "adobe-io",
+    "aio",
+    "app-builder",
+    "commerce-admin",
+    "rbac",
+    "ims",
+    "access-control"
+  ],
+  "main": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./hook": "./src/hook.js",
+    "./web": "./web/index.js"
+  },
+  "scripts": {
+    "build": "node ./scripts/build-web.js",
+    "prepublishOnly": "node ./scripts/build-web.js",
+    "postinstall": "node ./scripts/setup.js && node -e \"try{require('@adobedjangir/commerce-admin-management/scripts/discover').run()}catch(e){}\""
+  },
+  "files": [
+    "src",
+    "actions",
+    "web",
+    "scripts",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "esbuild": "^0.25.0"
+  },
+  "peerDependencies": {
+    "@adobedjangir/commerce-admin-management": ">=1.0.0"
+  },
+  "commerceAdmin": {
+    "register": "registerImsAccess"
+  }
+}
