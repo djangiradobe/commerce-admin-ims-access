@@ -22,7 +22,7 @@ export default function registerImsAccess () {
         id: 'my-access',
         path: '/my-access',
         label: 'My Access',
-        icon: 'User',
+        icon: 'LockClosed',
         parentId: 'system'
       },
       {
