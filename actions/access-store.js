@@ -63,7 +63,19 @@ async function ensureCollection (client) {
   }
 }
 
+// Per-warm-container cache of the email→role map. RBAC gates (assertMinRole)
+// and ims-user-profile read this on every gated write / page load, so caching
+// it briefly removes a repeated ABDB round-trip from the hot path. TTL bounds
+// cross-container staleness (a role change made elsewhere is visible within
+// ASSIGN_TTL_MS); a write in THIS container clears the cache immediately.
+let _assignCache = null
+let _assignCacheAt = 0
+const ASSIGN_TTL_MS = 30 * 1000
+
 async function readAssignments (params) {
+  const now = Date.now()
+  if (_assignCache && (now - _assignCacheAt) < ASSIGN_TTL_MS) return _assignCache
+
   let handle
   try { handle = await getClient(params) } catch (_) { return {} }
   try {
@@ -71,7 +83,7 @@ async function readAssignments (params) {
     const col = await handle.client.collection(COLLECTION)
     let doc = null
     try { const arr = await col.find({ _id: DOC_ID }).limit(1).toArray(); doc = arr && arr[0] } catch (_) {}
-    if (!doc || !doc.value) return {}
+    if (!doc || !doc.value) { _assignCache = {}; _assignCacheAt = now; return {} }
     try {
       const parsed = typeof doc.value === 'string' ? JSON.parse(doc.value) : doc.value
       const map = (parsed && parsed.assignments) || {}
@@ -80,12 +92,16 @@ async function readAssignments (params) {
       for (const [k, v] of Object.entries(map)) {
         if (ROLES.includes(v)) out[normEmail(k)] = v
       }
+      _assignCache = out; _assignCacheAt = now
       return out
     } catch (_) { return {} }
   } finally { try { await handle.close() } catch (_) {} }
 }
 
 async function writeAssignments (params, assignments) {
+  // Invalidate the local cache so the caller sees its own write immediately.
+  _assignCache = null
+  _assignCacheAt = 0
   const { client, close } = await getClient(params)
   try {
     await ensureCollection(client)

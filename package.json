@@ -1,6 +1,6 @@
 {
   "name": "@adobedjangir/commerce-admin-ims-access",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Email-based RBAC add-on for @adobedjangir/commerce-admin-management. Assign admin/editor/viewer roles by email via a UI (super-admins in .env), with server-side enforcement of config saves, schema edits, audit reverts, and snapshot ops.",
   "license": "Apache-2.0",
   "author": "Adobe Inc.",
