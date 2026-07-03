@@ -135,6 +135,10 @@ async function main (params) {
     const isSuperAdmin = !!email && store.superAdminEmails(params).includes(store.normEmail(email))
     return {
       statusCode: 200,
+      // Per-user response (role/identity varies by caller) — never cache it.
+      // A shared cache keys on URL, not the Authorization header, so caching
+      // would risk serving one user's role to another.
+      headers: { 'Cache-Control': 'no-store' },
       body: {
         ok: true,
         role,

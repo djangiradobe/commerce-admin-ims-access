@@ -41,10 +41,29 @@ function pickToken (params) {
   return raw ? String(raw).replace(/^Bearer\s+/i, '').trim() : null
 }
 
+// Small per-warm-container cache of token → email. fetchCallerEmail hits the
+// IMS profile endpoint on every gated write / profile load; the same user's
+// token repeats across requests in a warm container, so caching the lookup
+// (short TTL) removes that IMS round-trip from the RBAC hot path. Keyed by a
+// short fingerprint of the token (not the token itself); bounded in size.
+const _emailCache = new Map() // fp -> { email, at }
+const EMAIL_TTL_MS = 5 * 60 * 1000
+const EMAIL_CACHE_MAX = 200
+function tokenFingerprint (token) {
+  // Cheap, non-reversible-ish fingerprint: length + head/tail slices. Enough to
+  // distinguish tokens within a container without storing the whole secret.
+  const s = String(token)
+  return `${s.length}:${s.slice(0, 12)}:${s.slice(-12)}`
+}
+
 // Resolve the caller's IMS email from their forwarded bearer token.
 async function fetchCallerEmail (params) {
   const token = pickToken(params)
   if (!token) return null
+  const fp = tokenFingerprint(token)
+  const now = Date.now()
+  const hit = _emailCache.get(fp)
+  if (hit && (now - hit.at) < EMAIL_TTL_MS) return hit.email
   try {
     const headers = { Authorization: 'Bearer ' + token }
     const key = params.OAUTH_CLIENT_ID || params.IMS_OAUTH_S2S_CLIENT_ID
@@ -52,7 +71,10 @@ async function fetchCallerEmail (params) {
     const res = await fetch('https://ims-na1.adobelogin.com/ims/profile/v1', { headers })
     if (!res.ok) return null
     const p = await res.json()
-    return normEmail(p && p.email)
+    const email = normEmail(p && p.email)
+    if (_emailCache.size >= EMAIL_CACHE_MAX) _emailCache.clear() // simple bound
+    _emailCache.set(fp, { email, at: now })
+    return email
   } catch (_) { return null }
 }
 

@@ -6,6 +6,9 @@ actions:
     function: ims-user-profile/index.js
     web: 'yes'
     runtime: 'nodejs:20'
+    limits:
+      concurrency: 200
+      memory: 256
     inputs:
       LOG_LEVEL: debug
       OAUTH_CLIENT_ID: $OAUTH_CLIENT_ID
@@ -22,6 +25,9 @@ actions:
     function: access-list/index.js
     web: 'yes'
     runtime: 'nodejs:20'
+    limits:
+      concurrency: 200
+      memory: 256
     inputs:
       LOG_LEVEL: debug
       OAUTH_CLIENT_ID: $OAUTH_CLIENT_ID
@@ -38,6 +44,9 @@ actions:
     function: access-save/index.js
     web: 'yes'
     runtime: 'nodejs:20'
+    limits:
+      concurrency: 200
+      memory: 256
     inputs:
       LOG_LEVEL: debug
       OAUTH_CLIENT_ID: $OAUTH_CLIENT_ID
@@ -54,6 +63,9 @@ actions:
     function: access-delete/index.js
     web: 'yes'
     runtime: 'nodejs:20'
+    limits:
+      concurrency: 200
+      memory: 256
     inputs:
       LOG_LEVEL: debug
       OAUTH_CLIENT_ID: $OAUTH_CLIENT_ID
