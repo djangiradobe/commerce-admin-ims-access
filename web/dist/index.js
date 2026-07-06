@@ -1,11 +1,11 @@
-// web/src/index.js
+// web/src/index.tsx
 import { configureWeb } from "@adobedjangir/commerce-admin-management/web";
 
-// web/src/MyAccess.js
-import React, { useMemo } from "react";
+// web/src/MyAccess.tsx
+import { useMemo } from "react";
 import { View, Heading, Text, ProgressCircle, Flex } from "@adobe/react-spectrum";
 
-// web/src/useUserRole.js
+// web/src/useUserRole.tsx
 import { useEffect, useRef, useState } from "react";
 import { callAction } from "@adobedjangir/commerce-admin-management/web";
 import { getActionKey } from "@adobedjangir/commerce-admin-management/web";
@@ -48,7 +48,7 @@ function hasRole(userRole, required) {
   return ((_a = ROLE_RANK[userRole]) != null ? _a : -1) >= ((_b = ROLE_RANK[required]) != null ? _b : 99);
 }
 
-// web/src/MyAccess.js
+// web/src/MyAccess.tsx
 import { useSystemConfigSchema } from "@adobedjangir/commerce-admin-management/web";
 import { PALETTE, RADIUS, SHADOW } from "@adobedjangir/commerce-admin-management/web";
 import { jsx, jsxs } from "react/jsx-runtime";
@@ -179,8 +179,8 @@ function MyAccess(props) {
   ] });
 }
 
-// web/src/AccessManagement.js
-import React2, { useCallback, useEffect as useEffect2, useState as useState2 } from "react";
+// web/src/AccessManagement.tsx
+import { useCallback, useEffect as useEffect2, useState as useState2 } from "react";
 import {
   View as View2,
   Flex as Flex2,
@@ -346,8 +346,7 @@ function AccessManagement(props) {
   ] });
 }
 
-// web/src/RoleBadge.js
-import React3 from "react";
+// web/src/RoleBadge.tsx
 import {
   DialogTrigger,
   ActionButton,
@@ -355,8 +354,7 @@ import {
   Heading as Heading3,
   Content,
   Divider,
-  Text as Text3,
-  View as View3
+  Text as Text3
 } from "@adobe/react-spectrum";
 import { PALETTE as PALETTE3, RADIUS as RADIUS3 } from "@adobedjangir/commerce-admin-management/web";
 import { jsx as jsx3, jsxs as jsxs3 } from "react/jsx-runtime";
@@ -424,7 +422,7 @@ function RoleBadge({ runtime, ims }) {
   ] });
 }
 
-// web/src/index.js
+// web/src/index.tsx
 function registerImsAccess() {
   configureWeb({
     actionKeys: {
