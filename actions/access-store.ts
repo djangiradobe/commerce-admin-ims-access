@@ -165,7 +165,7 @@ async function resolveCaller (params) {
   }
 }
 
-module.exports = {
+export {
   COLLECTION, PATH, DOC_ID, ROLES,
   normEmail, parseEmails, superAdminEmails,
   fetchCallerEmail, readAssignments, writeAssignments,

@@ -90,4 +90,4 @@ async function assertValidCaller (params) {
   return null
 }
 
-module.exports = { checkFieldRole, resolveCallerRole, assertMinRole, assertValidCaller, ROLE_RANK }
+export { checkFieldRole, resolveCallerRole, assertMinRole, assertValidCaller, ROLE_RANK }

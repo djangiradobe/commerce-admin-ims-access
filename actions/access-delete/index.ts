@@ -37,4 +37,4 @@ async function main (params) {
   }
 }
 
-exports.main = main
+export { main }
