@@ -14,7 +14,7 @@ Licensed under the Apache License, Version 2.0
 // _system/access/roles) as { assignments: { "email": "role" } }. Emails +
 // roles aren't secrets, so the value is stored as plain JSON (not encrypted).
 
-const { getClient } = require('@adobedjangir/commerce-admin-management/abdb')
+const { getClient } = require('@adobedjangir/abdb')
 const { toStateKey } = require('@adobedjangir/commerce-admin-management/shared')
 
 const COLLECTION = 'system_config_data'
